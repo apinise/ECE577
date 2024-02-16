@@ -5,54 +5,36 @@ import scipy.io
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 
+def model_train(data_frame):
+    X = data_frame['Timestamp']
+    Y = data_frame[['Latitude','Longitude']]
+    print(X)
+    print(Y)
 
-# Convert to DataFrame
-mat = scipy.io.loadmat('week1.mat')
+def create_dataset():
+    # Import Mat Data
+    mat1 = scipy.io.loadmat('week1.mat')
+    mat2 = scipy.io.loadmat('week2.mat')
+    mat3 = scipy.io.loadmat('week3.mat')
+    mat4 = scipy.io.loadmat('week4.mat')
+    # Create Heading
+    data1 = mat1['week1']
+    data2 = mat2['week2']
+    data3 = mat3['week3']
+    data4 = mat4['week4']
+    # Convert to DataFrame
+    df1 = pd.DataFrame(data1)
+    df2 = pd.DataFrame(data2)
+    df3 = pd.DataFrame(data3)
+    df4 = pd.DataFrame(data4)
+    # Concatenating the dataframes vertically
+    merged_df = pd.concat([df1, df2, df3, df4])
+    merged_df.rename(columns= {0:'Timestamp', 1:'Latitude', 2:'Longitude', 3:'Accuracy', 4:'Label'}, inplace=True)
+    # Sorting by the leftmost column
+    merged_df = merged_df.sort_values(by='Timestamp')
+    # Return Dataset
+    return(merged_df)
 
-data = mat['week1']
-df = pd.DataFrame(data)
-
-# Display the DataFrame
+df = create_dataset()
 print(df)
-
-
-# Assuming you have two dataframes df1 and df2
-# with the same number of columns (5 columns) and sorted by the leftmost column
-
-# Example dataframes
-data1 = {
-    'A': [1, 3, 5],
-    'B': [2, 4, 6],
-    'C': [8, 10, 12],
-    'D': [9, 11, 13],
-    'E': [14, 15, 16]
-}
-
-data2 = {
-    'A': [2, 4, 6],
-    'B': [3, 5, 7],
-    'C': [9, 11, 13],
-    'D': [10, 12, 14],
-    'E': [17, 18, 19]
-}
-
-data3 = {
-    'A': [3, 5, 7],
-    'B': [4, 6, 8],
-    'C': [10, 12, 14],
-    'D': [11, 13, 15],
-    'E': [20, 21, 22]
-}
-
-df1 = pd.DataFrame(data1)
-df2 = pd.DataFrame(data2)
-df3 = pd.DataFrame(data3)
-
-# Concatenating the dataframes vertically
-merged_df = pd.concat([df1, df2, df3])
-
-# Sorting by the leftmost column
-merged_df = merged_df.sort_values(by='A')
-
-print(merged_df)
-
+model_train(df)
